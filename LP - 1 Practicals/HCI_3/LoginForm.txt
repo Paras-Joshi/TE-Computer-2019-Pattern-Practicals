@@ -1,0 +1,70 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def login():
+    username = username_entry.get()
+    password = password_entry.get()
+
+    if username == "admin" and password == "password":
+        messagebox.showinfo("Login successful","Welcome Admin !")
+    else:
+        messagebox.showinfo("Login failed", "Invaild Credentials !")
+
+root = tk.Tk()
+root.title("Login Page")
+root.geometry("400x300")#widthxHeight
+
+
+title_label = tk.Label(root,text="Login", font = ("Arial",24), bg='#ADD8E6', fg="#333")
+title_label.pack(pady=20) ## Adds 20 pixels of space above and below of title_label
+
+username_label = tk.Label(root, text="Username", font = ("Arial",14), bg='#ADD8E6',fg="#333")
+username_label.pack(pady=5)
+username_entry = tk.Entry(root, font = ("Arial",14), width=30)
+username_entry.pack(pady=5)
+
+password_label = tk.Label(root, text="Password", font = ("Arial",14), bg='#ADD8E6',fg="#333")
+password_label.pack(pady=5)
+
+password_entry = tk.Entry(root, font = ("Arial",14), show="*", width=30)
+password_entry.pack(pady=5)
+
+login_button = tk.Button(root, text="LOGIN",font=("Arial",14),bg='#FFA07A', fg="#FFF", command=login)
+login_button.pack(pady=20)
+root.mainloop()
+# import tkinter as tk
+
+# root = tk.Tk()
+# root.geometry("300x200")
+
+# # Label 1 at the top
+# label1 = tk.Label(root, text="Top Label", bg="lightblue")
+# label1.pack(side="top", fill="x")
+
+# # Label 2 at the bottom
+# label2 = tk.Label(root, text="Bottom Label", bg="lightgreen")
+# label2.pack(side="bottom", fill="x")
+
+# # Label 3 on the left
+# label3 = tk.Label(root, text="Left Label", bg="lightpink")
+# label3.pack(side="left", fill="y")
+
+# # Label 4 on the right
+# label4 = tk.Label(root, text="Right Label", bg="lightyellow")
+# label4.pack(side="right", fill="y")
+
+# root.mainloop()
+# import tkinter as tk
+
+# root = tk.Tk()
+# root.geometry("300x200")
+
+# # Label with horizontal padding (padx)
+# label1 = tk.Label(root, text="Label 1", bg="lightblue")
+# label1.pack(pady=10, padx=20)  # Adds 10 pixels of vertical space and 20 pixels of horizontal space
+
+# label2 = tk.Label(root, text="Label 2", bg="lightgreen")
+# label2.pack(pady=10, padx=40)  # Adds 10 pixels of vertical space and 40 pixels of horizontal space
+
+# root.mainloop()
+

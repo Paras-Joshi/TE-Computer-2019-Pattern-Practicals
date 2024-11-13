@@ -1,0 +1,41 @@
+package package3;
+
+import java.util.*; 
+public class Demo { 
+ public static void main(String[] args) { 
+	 Scanner sc = new Scanner(System.in);
+	 float avgtt = 0,avgwt = 0;
+	 int n;
+	 System.out.println("\n Enter No of Processe: ");
+	 n = sc.nextInt();
+	 String[] process = new String[n];
+	 int[] arrivalTime = new int[n];
+	 int[] waitingTime = new int[n];
+	 int[] burstTime = new int[n];
+	 int[] completionTime = new int[n];
+	 int[] tat = new int[n];
+	 for(int i = 0;i < n;i++) {
+		 process[i]  = "P" + (i+1);
+		 System.out.println("\n Enter Arrival Time of Processor "+(i+1)+" : ");
+		 arrivalTime[i] = sc.nextInt(); 
+		 System.out.print("Enter Burst Time for processor " + (i+1) + ": "); 
+		burstTime[i] = sc.nextInt();
+	 }
+	 completionTime[0] = burstTime[0];
+	 for(int i = 0;i < n-1;i++) {
+		 completionTime[i+1] = completionTime[i]+burstTime[i+1];
+	 }
+	 System.out.println("*** First Come First Serve Scheduling ***"); 
+	 System.out.println("Processor\tArrival time\tBrust time\tCompletion Time\t\tTurn around time\tWaiting time"); 
+	 System.out.println("----------------------------------------------------------------------------------------------------------"); 
+	 for(int i = 0; i < n;i++) {
+		 tat[i] = completionTime[i] - arrivalTime[i];
+		 waitingTime[i] = tat[i] - burstTime[i];
+		 avgtt += tat[i];
+		 avgwt += waitingTime[i];
+		 System.out.println(process[i]+"\t\t"+arrivalTime[i]+"ms\t\t"+burstTime[i]+"ms\t\t"+completionTime[i]+"ms\t\t\t"+tat[i]+"ms\t\t\t"+waitingTime[i]+"ms"); 
+	 }
+	 System.out.println("Average turn around time of processor: "+(avgtt/n)+"ms\nAverage waiting time of processor: "+(avgwt/n)+"ms"); 
+	 
+ 	} 
+}

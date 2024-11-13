@@ -1,0 +1,69 @@
+package package3;
+import java.util.Scanner; 
+public class Pr6_4 { 
+ static void worstFit(int blockSize[], int m, int processSize[],int n,int remblockSize[]) 
+ { 
+	// Initialize all allocations to -1 (indicating not allocated)
+	 int allocation[] = new int[n];
+	 for(int i = 0;i < allocation.length;i++) {
+		 allocation[i] = -1; // Allocation array for processes
+	 }
+	 for(int i = 0; i < n;i++) {
+		// Process each process to find the worst fit block
+		 //For each process, iterate through all blocks to find the block with the maximum size that can still accommodate the process.
+		 int worstIdx = -1;
+		 for(int j = 0;j < m;j++) {
+			 if(blockSize[j] >= processSize[i]) {
+				 if(worstIdx == -1)
+					 worstIdx = j;
+				 else if(blockSize[worstIdx] < blockSize[j]) //The current block size is greater than the previously selected block's size
+					 worstIdx = j;
+				 // Here we always find the largest block to provide space to process
+				 
+			 }
+		 }
+		// Allocate block if a suitable one was found
+		 if(worstIdx != -1) {
+			 allocation[i] = worstIdx;
+			 blockSize[worstIdx] -= processSize[i];
+			 remblockSize[i] = blockSize[worstIdx];// Store remaining size
+
+		 }
+	 }
+	 System.out.println("\nProcess No.\tProcess Size\tBlock no.\tRemaninig Block Size");
+	 for (int i = 0; i < n; i++) 
+	 { 
+		 System.out.print(" " + (i+1) + "\t\t" + processSize[i] + "\t\t"); 
+		 if (allocation[i] != -1) { 
+		 System.out.print((allocation[i] + 1)+"\t\t"+remblockSize[i]); 
+		 } 
+		 else { 
+		 System.out.print("Not Allocated"+"\t"+remblockSize[i]); 
+		 } 
+		 System.out.println();
+	 }
+ } 
+ public static void main(String[] args) { 
+	 	int m,n,num;
+	 	Scanner in=new Scanner(System.in);
+		System.out.print("Enter how many number of blocks you want to enter:"); 
+		m=in.nextInt();
+		int remblockSize[]=new int[m]; 
+		int blockSize[]=new int[m]; 
+		for(int i=0;i<m;i++) { 
+			 System.out.print("Enter Data "+(i+1)+":"); 
+			 num=in.nextInt(); 
+			 blockSize[i]=num; 
+		}
+		System.out.print("Enter how many number of process you want to enter:"); 
+		 n=in.nextInt(); 
+		 int processSize[]=new int[n]; 
+		 for(int i=0;i<n;i++) { 
+			 System.out.print("Enter Data "+(i+1)+":"); 
+			 num=in.nextInt(); 
+			 processSize[i]=num; 
+		 } 
+		// Perform the worst fit allocation
+		 worstFit(blockSize, m, processSize, n,remblockSize);
+ 	}
+ }

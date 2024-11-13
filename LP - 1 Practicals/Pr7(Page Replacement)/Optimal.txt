@@ -1,0 +1,99 @@
+package package3;
+import java.util.*;
+//Optimal Page Replacement algorithm
+public class Pr7_2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		int noofpages,capacity,fault = 0,hit = 0,ptr = 0;
+		double hitRatio, faultRatio;
+		boolean isFull = false;
+		System.out.println("\n Enter No of Pages : ");
+		noofpages = sc.nextInt();
+		int[] pages = new int[noofpages];
+		System.out.println("\n Enter Pages : ");
+		for(int i = 0;i < noofpages;i++) {
+			pages[i] = sc.nextInt();
+		}
+		System.out.println("\n Enter Capacity of frame : ");
+		capacity = sc.nextInt();
+		int[] frame = new int[capacity];
+		for(int i = 0;i < capacity;i++) {
+			frame[i] = -1;
+		}
+		int table[][] = new int[noofpages][capacity];
+		System.out.println("\n----------------------------------------------------------------------");
+		for(int i = 0; i < noofpages;i++) {
+			int search = -1;
+			for(int j = 0; j < capacity;j++) {
+				if(frame[j] == pages[i]) {
+					search = j;
+					hit++;
+					System.out.printf("%3s","H");
+					break;
+				}
+			}
+			if(search == -1) {
+				if(isFull) {
+					int index[] = new int[capacity];
+					boolean[] index_flag = new boolean[capacity];
+					for(int j = i+1;j < noofpages;j++) {
+						for(int k = 0; k < capacity;k++) {
+							if(pages[j] == frame[k] && (!index_flag[k])) {
+								index[k] = j; // Store the next index for frame[k] We store the index j in index[k], which indicates when frame[k] will be accessed next.
+								//we found that frame[k] will be accessed again in the future at index j in the pages array. 
+								//Therefore, we store that index (j) in the index array at position k, which corresponds to the frame position.
+								index_flag[k] = true; // Mark that we found this page
+								break;
+							}
+						}
+					}
+					int max = index[0]; //We start by assuming the first index is the largest (max).
+					ptr = 0;	// Stores index of page to replace
+					if(max == 0) {
+						max = 200;//If max is 0, we replace it with 200 to ensure it’s higher than any index we will compare later.
+					} 
+					for(int j = 0; j < capacity;j++) {
+						//If the next access index for a page is 0, it means this page is not going to be accessed again. So we set its value to 200 to mark it as such.
+						if(index[j] == 0) {
+							index[j] = 200; // Mark pages not used in the future
+						}
+						if(index[j] > max) {
+							max = index[j]; // Update max if we find a larger index
+							ptr = j;
+						}
+					}
+				}
+				// Replacing Page
+				frame[ptr] = pages[i];
+				fault++;
+				System.out.printf("%3s","F");
+				if(!isFull) {
+					ptr++;
+					if(ptr == capacity) {
+						isFull = true;
+						ptr = 0;
+					}
+				}
+			
+			}
+			System.arraycopy(frame, 0, table[i], 0, capacity); // Store current frame state
+		}
+		System.out.println("\n----------------------------------------------------------------------");
+		for(int i = 0; i < capacity;i++) {
+			for(int j = 0; j < noofpages;j++) {
+				System.out.printf("%3d",table[j][i]);
+			}
+			System.out.println();
+		}
+		System.out.println("----------------------------------------------------------------------"); 
+		 faultRatio=((double)fault/noofpages)*100; 
+		 hitRatio=((double)hit/noofpages)*100; 
+		 System.out.println("Page Fault: "+fault+"\nPage Hit: "+hit); 
+		 System.out.printf("Hit Ratio:%.2f \nFault Ratio:%.2f ",hitRatio,faultRatio);
+	}
+
+}
+//the algorithm managed page requests efficiently by strategically replacing pages that would not be used again for the longest time. 
+//The optimal page replacement strategy minimizes page faults by looking ahead to determine which pages are least likely to be used, resulting in better memory management.

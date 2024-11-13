@@ -1,0 +1,62 @@
+package package3;
+import java.util.*;
+// FIFO Page Replacement Algorithm
+public class Pr7_1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		int noofpages = 0, capacity = 0,hit = 0, fault=0,index = 0;
+		double hitRatio , faultRatio;
+		System.out.println("\n Enter No of Pages : ");
+		noofpages = sc.nextInt();
+		int[] pages = new int[noofpages];
+		System.out.println("\n Enter Pages : ");
+		for(int i = 0;i < noofpages;i++) {
+			pages[i] = sc.nextInt();
+		}
+		System.out.println("\n Enter Capacity of frame : ");
+		capacity = sc.nextInt();
+		int[] frame = new int[capacity];
+		for(int i = 0;i < capacity;i++) {
+			frame[i] = -1;
+		}
+		int table[][] = new int[noofpages][capacity];
+		System.out.println("\n----------------------------------------------------------------------");
+		for(int i = 0; i < noofpages;i++) {
+			int search = -1;
+			for(int j = 0; j < capacity;j++) {
+				if(frame[j] == pages[i]) {
+					search = j;
+					hit++;
+					System.out.printf("%3s","H");
+					break;
+				}
+			}
+			if(search == -1) {
+				frame[index] = pages[i];
+				fault++;
+				System.out.printf("%3s","F");
+				index++;
+				if(index == capacity) {
+					index = 0;
+				}
+			
+			}
+			System.arraycopy(frame, 0, table[i], 0, capacity); // Store current frame state
+		}
+		System.out.println("\n----------------------------------------------------------------------");
+		for(int i = 0; i < capacity;i++) {
+			for(int j = 0; j < noofpages;j++) {
+				System.out.printf("%3d",table[j][i]);
+			}
+			System.out.println();
+		}
+		System.out.println("----------------------------------------------------------------------"); 
+		 faultRatio=((double)fault/noofpages)*100; 
+		 hitRatio=((double)hit/noofpages)*100; 
+		 System.out.println("Page Fault: "+fault+"\nPage Hit: "+hit); 
+		 System.out.printf("Hit Ratio:%.2f \nFault Ratio:%.2f ",hitRatio,faultRatio);
+	}
+
+}

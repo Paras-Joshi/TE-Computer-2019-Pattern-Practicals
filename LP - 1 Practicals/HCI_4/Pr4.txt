@@ -1,0 +1,114 @@
+import tkinter as tk
+from tkinter import ttk
+
+# Main Application Class
+class ComplexGUIApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Redesigned Complex GUI")
+        self.geometry("800x600")
+
+        # Create a container for different screens (frames)
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+
+        #This sets the first row (index 0) of the container to be stretchable when the window or container is resized.
+        container.grid_rowconfigure(0, weight=1)
+        #This sets the first column (index 0) of the container to be stretchable when the window or container is resized.
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {} #A dictionary storing instances of all frames
+
+        # Initialize different frames (screens)
+        for F in (HomeScreen, SettingsScreen, DataScreen):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew") #Places each frame in the container. sticky="nsew" ensures that the frames stretch to fill the container.
+
+        self.show_frame(HomeScreen) #Displays the initial frame (home screen) when the application starts.
+ 
+    # Function to display a frame for a given screen
+    #Brings the specified frame to the front of the stack using .tkraise(), 
+    # making it the currently visible screen.
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
+
+# Home Screen Class
+class HomeScreen(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        label = tk.Label(self, text="Welcome to Home Screen", font=("Arial", 18))
+        label.pack(pady=10, padx=10)
+
+        # Buttons for navigation
+        settings_button = ttk.Button(self, text="Go to Settings",
+                                     command=lambda: controller.show_frame(SettingsScreen))
+        settings_button.pack()
+
+        data_button = ttk.Button(self, text="Go to Data Screen",
+                                 command=lambda: controller.show_frame(DataScreen))
+        data_button.pack()
+
+# Settings Screen Class
+class SettingsScreen(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        label = tk.Label(self, text="Settings", font=("Arial", 18))
+        label.pack(pady=10, padx=10)
+
+        # Sample setting: theme change
+        theme_label = tk.Label(self, text="Select Theme:")
+        theme_label.pack(pady=5)
+
+        theme_var = tk.StringVar(value="Light")
+        theme_options = ["Light", "Dark"]
+        theme_dropdown = ttk.OptionMenu(self, theme_var, *theme_options)
+        theme_dropdown.pack(pady=5)
+
+        # Navigation buttons
+        home_button = ttk.Button(self, text="Go to Home",
+                                 command=lambda: controller.show_frame(HomeScreen))
+        home_button.pack(pady=20)
+
+# Data Screen Class
+class DataScreen(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        label = tk.Label(self, text="Data Screen", font=("Arial", 18))
+        label.pack(pady=10, padx=10)
+
+        # Simulate a data display table
+        columns = ('ID', 'Name', 'Value')
+        data_tree = ttk.Treeview(self, columns=columns,show='headings')
+
+        for col in columns:
+            data_tree.heading(col, text=col)
+
+        # Sample data
+        sample_data = [(1, 'Temperature', '22C'),
+                       (2, 'Humidity', '60%'),
+                       (3, 'Pressure', '1012 hPa')]
+
+        for data in sample_data:
+            data_tree.insert('', tk.END, values=data)
+
+            #'' (Empty String): This is the parent parameter. 
+                # By passing an empty string, you are indicating that the new row should be added at the top level of the tree, 
+                # not as a child of any other item.
+            #tk.END: This is the index parameter, which means that the row should be added at the end of the existing rows. 
+
+        data_tree.pack(pady=20)
+
+        # Navigation buttons
+        home_button = ttk.Button(self, text="Go to Home",
+                                 command=lambda: controller.show_frame(HomeScreen))
+        home_button.pack(pady=20)
+
+# Main code to run the application
+if __name__ == "__main__":
+    app = ComplexGUIApp()
+    app.mainloop() #Starts the tkinter event loop, keeping the application window open and responsive until closed by the user.
+
+#if __name__ == "__main__": It means "only run this code if this file is being run directly, not if it’s being imported into another file."
+#it helps you separate the main part of the program from the code that should only run when the file is executed directly.

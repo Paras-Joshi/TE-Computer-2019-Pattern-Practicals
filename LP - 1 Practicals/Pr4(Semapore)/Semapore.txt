@@ -1,0 +1,53 @@
+package package3;
+
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
+public class Pr_4 {
+private static final int BUFFER_SIZE = 5;
+private static Queue<Integer> buffer = new LinkedList<>();
+private static Semaphore mutex = new Semaphore(1);//Acts as a mutex (mutual exclusion) to ensure only one thread accesses the shared resource (buffer) at a time.
+private static Semaphore empty = new Semaphore(BUFFER_SIZE);//Initialized with the BUFFER_SIZE value, indicating the total number of slots in the buffer that can be filled.
+private static Semaphore full = new Semaphore(0);//Tracks the number of filled slots in the buffer.
+public static void main(String args[])
+{
+	Thread producer = new Thread(new Producer());
+	Thread consumer = new Thread(new Consumer());
+	producer.start();
+	consumer.start();
+} 
+static class Producer implements Runnable{
+	public void run() {
+	try{
+		for(int i=0; i<10; i++)
+		{
+			empty.acquire();
+			mutex.acquire();	// lock the buffer
+			buffer.add(i);
+			System.out.println("Produced" + i);
+			mutex.release();
+			full.release();//Calls full.release() to signal that an item has been added to the buffer.
+		}
+	} catch(InterruptedException e) {
+		Thread.currentThread().interrupt();
+		}
+	}
+}
+static class Consumer implements Runnable{
+public void run() {
+try {
+	for(int i=0; i<10; i++)
+	{
+		full.acquire();
+		mutex.acquire();
+		int item = buffer.remove();
+		System.out.println("Consumed" + item);
+		mutex.release();
+		empty.release();//Calls empty.release() to indicate that an empty slot is available in the buffer	
+	}
+}catch(InterruptedException e) {
+	Thread.currentThread().interrupt();
+	}
+}
+}
+}
